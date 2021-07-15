@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import { SnackbarProvider } from 'notistack';
-import Dashboard from './layouts/Dashboard/Dashboard';
 import renderRoutes from './routes/renderRoutes';
 import { routes } from './routes/routes';
 

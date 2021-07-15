@@ -1,25 +1,22 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import type { FC } from 'react';
 import clsx from 'clsx';
 import {
   makeStyles,
   CssBaseline,
   Drawer,
-  AppBar,
-  Toolbar,
   List,
-  Typography,
   Divider,
   IconButton,
-  Badge,
   Container,
-  Grid
+  ListItem,
+  ListItemIcon,
+  ListItemText,
 } from '@material-ui/core';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import MenuIcon from '@material-ui/icons/Menu';
-import mainListItems from './listItems';
+import { NavLink } from 'react-router-dom';
 import NavBar from './NavBar/index';
+import listItems from './listItems';
 
 const drawerWidth = 240;
 
@@ -98,6 +95,23 @@ const Dashboard:FC = ({ children }) => {
     setOpen(false);
   };
 
+  const renderSection:React.ReactNode = useMemo(
+    () =>
+      listItems.map(({ path, text, icon: Icon }) => (
+        <NavLink to={path} style={{ color: '#000', textDecoration: 'none' }}>
+          <ListItem button>
+            <ListItemIcon>
+              {Icon && (
+                <Icon />
+              )}
+            </ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        </NavLink>
+      )),
+    []
+  );
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -115,7 +129,9 @@ const Dashboard:FC = ({ children }) => {
           </IconButton>
         </div>
         <Divider />
-        <List>{mainListItems}</List>
+        <List>
+          <div>{renderSection}</div>
+        </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />

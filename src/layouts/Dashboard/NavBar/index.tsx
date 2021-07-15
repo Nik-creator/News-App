@@ -8,7 +8,7 @@ import {
   Badge,
   makeStyles
 } from '@material-ui/core';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import MenuIcon from '@material-ui/icons/Menu';
 
 interface OwnProps {
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NavBar = ({ handleDrawerOpen, open }:OwnProps) => {
+const NavBar: FC<OwnProps> = ({ handleDrawerOpen, open }) => {
   const classes = useStyles();
   const mockedBreadcrumbs = 'новости';
   return (
@@ -69,8 +69,8 @@ const NavBar = ({ handleDrawerOpen, open }:OwnProps) => {
             {mockedBreadcrumbs}
           </Typography>
           <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
+            <Badge badgeContent={0} color="secondary">
+              <AccountCircleIcon />
             </Badge>
           </IconButton>
         </Toolbar>
