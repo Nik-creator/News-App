@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
 
 const NavBar: FC<OwnProps> = ({ handleDrawerOpen, open }) => {
   const classes = useStyles();
+  // TODO сделать breadcrumbs
   const mockedBreadcrumbs = 'новости';
   return (
     <>

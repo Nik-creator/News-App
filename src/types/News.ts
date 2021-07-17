@@ -15,7 +15,7 @@ export interface IArticles {
 }
 
 export interface INews {
-  status: 'ok' | 'error';
+  status: 'ok' | 'error' | null;
   totalResults: number;
   articles: IArticles[]
 }
