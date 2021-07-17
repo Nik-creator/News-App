@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import DataTable from 'src/components/dataTable/index';
+import DataTable from 'src/components/dataTable/DataTable';
 import NewsItem from 'src/components/newsItem';
 import type { RootState } from 'src/redux/index';
 import { useSelector } from 'src/redux/index';
@@ -20,9 +20,7 @@ const News = () => {
       (async () => {
         try {
           setLoading(true);
-          // const { articles } = await API.getAllNews();
           dispatch(fetchNews());
-          // setNewsData(articles);
         } catch (error) {
           console.error(error);
         }
