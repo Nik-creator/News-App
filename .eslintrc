@@ -57,7 +57,7 @@
     "react/jsx-props-no-spreading": "off",
     "react/require-default-props": "off",
     "no-confusing-arrow": "off",
-    "max-len": [2, { "code": 140, "tabWidth": 2, "ignoreUrls": true }],
+    "max-len": "off",
     "linebreak-style": 0,
     "object-curly-newline": "off",
     "react/jsx-wrap-multilines": "off",

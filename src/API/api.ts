@@ -35,7 +35,7 @@ class API {
   private getState() {
     return store.getState();
   }
-// eslint-disable-next-line
+  // eslint-disable-next-line
   async getAllNews() {
     try {
       const { data } = await axiosInstance.get<INews>('/everything');
