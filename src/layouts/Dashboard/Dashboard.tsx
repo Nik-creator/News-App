@@ -98,7 +98,11 @@ const Dashboard:FC = ({ children }) => {
   const renderSection:React.ReactNode = useMemo(
     () =>
       listItems.map(({ path, text, icon: Icon }) => (
-        <NavLink to={path} style={{ color: '#000', textDecoration: 'none' }}>
+        <NavLink
+          key={`${path}`}
+          to={path}
+          style={{ color: '#000', textDecoration: 'none' }}
+        >
           <ListItem button>
             <ListItemIcon>
               {Icon && (

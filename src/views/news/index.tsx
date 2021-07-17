@@ -1,22 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import API from 'src/API/api';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import DataTable from 'src/components/dataTable/index';
 import NewsItem from 'src/components/newsItem';
-import type { IArticles } from 'src/types/News';
+import type { RootState } from 'src/redux/index';
+import { useSelector } from 'src/redux/index';
+import { useDispatch } from '../../redux/index';
+import { fetchNews } from '../../redux/slice/news';
 
 const News = () => {
   const [loading, setLoading] = useState(false);
-  // TODO данные должны лежать в redux
-  const [newsData, setNewsData] = useState<IArticles[]>();
-  // TODO запрос должен быть в санке
+  const dispatch = useDispatch();
+  const { articles: newsData, totalResults } = useSelector(({ news }: RootState) => news);
+
+  // TODO запрос должен быть в санкe
+
   useEffect(
     () => {
       (async () => {
         try {
           setLoading(true);
-          const { articles } = await API.getAllNews();
-          setNewsData(articles);
+          // const { articles } = await API.getAllNews();
+          dispatch(fetchNews());
+          // setNewsData(articles);
         } catch (error) {
           console.error(error);
         }
@@ -24,15 +30,16 @@ const News = () => {
       })();
     }, []
   );
+
   return (
-    <div>
+    <PerfectScrollbar>
       {loading
-        ? <CircularProgress />
-        : <DataTable
-            NewsRow={NewsItem}
-            newsData={newsData}
-        />}
-    </div>
+          ? <CircularProgress />
+          : <DataTable
+              NewsRow={NewsItem}
+              newsData={newsData}
+          />}
+    </PerfectScrollbar>
   );
 };
 export default React.memo(News);
