@@ -1,20 +1,5 @@
 const menuSuggestion = [
   {
-    itemNumber: 5
-  },
-  {
-    itemNumber: 6
-  },
-  {
-    itemNumber: 7
-  },
-  {
-    itemNumber: 8
-  },
-  {
-    itemNumber: 9
-  },
-  {
     itemNumber: 10
   },
   {

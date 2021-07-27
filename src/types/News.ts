@@ -15,7 +15,10 @@ export interface IArticles {
 }
 
 export interface INews {
+  loading: boolean;
   status: 'ok' | 'error' | null;
+  currentPage: number;
   totalResults: number;
-  articles: IArticles[]
+  articles: IArticles[];
+  error: any
 }

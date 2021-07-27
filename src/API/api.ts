@@ -29,19 +29,32 @@ class API {
     // // return что то
     // })
   }
-
-  // можем обращаться только внутри этого класса
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   private getState() {
     return store.getState();
+  }
+
+  private getQueryParams() {
+    const {
+      settings: { pageSize },
+      news: { currentPage }
+    } = this.getState();
+    const queryParams = [];
+    if (pageSize) {
+      queryParams.push(`?pageSize=${pageSize}`);
+    }
+    if (currentPage) {
+      queryParams.push(`page=${currentPage}`);
+    }
+    return `${queryParams.join('&')}`;
   }
   // eslint-disable-next-line
   async getAllNews() {
     try {
-      const { data } = await axiosInstance.get<INews>('/everything');
+      const { data } = await axiosInstance.get<INews>(`/everything${this.getQueryParams()}`);
       return data;
-    } catch {
-      return Promise.reject(new Error('Ошибка запроса'));
+    } catch (e) {
+      return Promise.reject(new Error(e as string));
     }
   }
 }
