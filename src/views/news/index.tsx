@@ -19,6 +19,8 @@ const News = () => {
   const dispatch = useDispatch();
   const { articles: newsData, loading, error: requestError } = useSelector(({ news }: RootState) => news);
 
+  const newsDataLength = Boolean(newsData.length);
+
   const getNews = async () => {
     try {
       await dispatch(fetchNews());
@@ -44,13 +46,13 @@ const News = () => {
   );
   return (
     <Box className="HERE">
-      {(!loading && Boolean(newsData.length)) && (
+      {(!loading || newsDataLength) && (
       <NewsContainer
         NewsRow={NewsItem}
         newsData={newsData}
         getNews={getNewsWithNewPage}
       />)}
-      {loading && <CircularProgress />}
+      {(loading && !newsDataLength) && <CircularProgress />}
       {requestError && (
         <Box
           display="flex"
