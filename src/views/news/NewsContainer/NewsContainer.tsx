@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import { useSelector } from 'src/redux/index';
 import type { RootState } from 'src/redux/index';
+import NewsSearch from '../NewsSearch/NewsSearch';
 
 interface OwnProps {
   NewsRow: ComponentType<IArticles>;
@@ -27,20 +28,30 @@ const NewsContainer: FC<OwnProps> = ({ NewsRow, newsData = [], getNews }) => {
     )), [newsData]
   );
   return (
-    <Container maxWidth="md">
-      {renderNewsCard}
+    <Container maxWidth="lg">
       <Box
-        mt={3}
         display="flex"
-        justifyContent="center"
+        justifyContent="space-between"
       >
-        {!loading
+        <Box maxWidth="720px">
+          {renderNewsCard}
+          <Box
+            mt={3}
+            display="flex"
+            justifyContent="center"
+          >
+            {!loading
           ?
             <Button variant="outlined" onClick={getNews}>
               Загрузить ещё
             </Button>
           :
             <CircularProgress />}
+          </Box>
+        </Box>
+        <Box>
+          <NewsSearch />
+        </Box>
       </Box>
     </Container>
   );

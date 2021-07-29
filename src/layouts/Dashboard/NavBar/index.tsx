@@ -8,6 +8,7 @@ import {
   Badge,
   makeStyles
 } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import MenuIcon from '@material-ui/icons/Menu';
 
@@ -50,7 +51,13 @@ const useStyles = makeStyles((theme) => ({
 
 const NavBar: FC<OwnProps> = ({ handleDrawerOpen, open }) => {
   const classes = useStyles();
+  const history = useHistory();
   // TODO сделать breadcrumbs
+
+  const goToLogin = () => {
+    history.push('/login');
+  };
+
   const mockedBreadcrumbs = 'новости';
   return (
     <>
@@ -69,7 +76,7 @@ const NavBar: FC<OwnProps> = ({ handleDrawerOpen, open }) => {
             {/* breadcrumbs */}
             {mockedBreadcrumbs}
           </Typography>
-          <IconButton color="inherit">
+          <IconButton color="inherit" onClick={goToLogin}>
             <Badge badgeContent={0} color="secondary">
               <AccountCircleIcon />
             </Badge>

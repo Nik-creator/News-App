@@ -1,6 +1,7 @@
 import axios from 'axios';
 import store from 'src/redux/index';
 import type { INews } from 'src/types/News';
+import { format } from 'date-fns';
 
 const {
   REACT_APP_API_URL: baseUrl,
@@ -37,7 +38,10 @@ class API {
   private getQueryParams() {
     const {
       settings: { pageSize },
-      news: { currentPage }
+      news: { currentPage },
+      newsFilters: {
+        from, to
+      }
     } = this.getState();
     const queryParams = [];
     if (pageSize) {
@@ -45,6 +49,12 @@ class API {
     }
     if (currentPage) {
       queryParams.push(`page=${currentPage}`);
+    }
+    if (from) {
+      queryParams.push(`from=${from}`);
+    }
+    if (to) {
+      queryParams.push(`to=${to}`);
     }
     return `${queryParams.join('&')}`;
   }
