@@ -6,7 +6,7 @@ import {
   Typography,
   makeStyles
 } from '@material-ui/core';
-import { KeyboardDatePicker } from '@material-ui/pickers';
+import { DatePicker } from '@material-ui/pickers';
 import { useSnackbar } from 'notistack';
 import { useSelector, useDispatch } from 'src/redux/index';
 import type { RootState } from 'src/redux/index';
@@ -18,9 +18,11 @@ const styles = makeStyles(() => ({
     border: '1px solid #000',
     borderRadius: 4,
     padding: '10px 15px',
+    position: 'fixed',
+    right: 190
   },
   button: {
-    width: 130
+    width: 140
   },
   typography: {
     paddingBottom: 15,
@@ -29,7 +31,6 @@ const styles = makeStyles(() => ({
 }));
 
 const NewsSearch: FC = () => {
-  const [value, setValue] = useState<any>();
   const { from, to } = useSelector(({ newsFilters }: RootState) => newsFilters);
 
   const dispatch = useDispatch();
@@ -50,12 +51,13 @@ const NewsSearch: FC = () => {
     invalidDateMessage: 'Неправильный формат даты',
     autoOk: true,
     disableFuture: true,
-    // format: 'DD.MM.YYYY',
+    format: 'd MMMM yyyy',
+    disableToolbar: true
   };
 
   return (
     <Box
-      width="300px"
+      width="320px"
       height="400px"
       className={classes.root}
     >
@@ -65,9 +67,9 @@ const NewsSearch: FC = () => {
         justifyContent="space-between"
       >
         <Box mt={2}>
-          <KeyboardDatePicker
-            value={value}
-            onChange={setValue}
+          <DatePicker
+            value={from}
+            onChange={handleChangeDateStart}
             {...baseDatePickerProps}
             variant="inline"
             label="С"
@@ -76,15 +78,15 @@ const NewsSearch: FC = () => {
           />
         </Box>
         <Box mt={2}>
-          {/* <KeyboardDatePicker
+          <DatePicker
             value={to}
             onChange={handleChangeDateEnd}
-            // {...baseDatePickerProps}
-            // variant="inline"
-            // label="По"
-            // inputVariant="outlined"
-            // className={classes.button}
-          /> */}
+            {...baseDatePickerProps}
+            variant="inline"
+            label="По"
+            inputVariant="outlined"
+            className={classes.button}
+          />
         </Box>
       </Box>
     </Box>

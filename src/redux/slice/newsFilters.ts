@@ -12,7 +12,7 @@ type InitialStateType = {
 
 const initialState: InitialStateType = {
   from: null,
-  to: format(new Date(), 'yyyy-m-d'),
+  to: format(new Date(), 'yyyy-MM-d'),
 };
 
 const slice = createSlice({
