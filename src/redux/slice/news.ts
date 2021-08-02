@@ -65,17 +65,12 @@ const slice = createSlice({
         status,
         totalResults
       } = payload;
-      console.log('in state', state.articles);
-      console.log('in action', articles);
       const newListNews = state.articles.concat(articles);
       state.articles = newListNews;
-      console.log(newListNews);
+
       // if (state.articles.length > 0) {
-      //   console.log('in state', state.articles);
-      //   console.log('in action', articles);
       //   const newListNews =
       //   _.differenceWith(state.articles, articles, ({ publishedAt: publishedAtInState, publishedAt: publishedAtInAction }) => publishedAtInState === publishedAtInAction);
-      //   console.log('after', newListNews);
       //   state.articles = newListNews;
       // } else {
       //   state.articles = articles;

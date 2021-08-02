@@ -2,6 +2,7 @@ import axios from 'axios';
 import store from 'src/redux/index';
 import type { INews } from 'src/types/News';
 import { format } from 'date-fns';
+import mapStateInParams from 'src/helpers/getQueryString';
 
 const {
   REACT_APP_API_URL: baseUrl,
@@ -37,26 +38,14 @@ class API {
 
   private getQueryParams() {
     const {
-      settings: { pageSize },
-      news: { currentPage },
-      newsFilters: {
-        from, to
-      }
+      settings: { pageSize: NumberPageSize },
+      news: { currentPage: NumbreCurrentPage },
+      newsFilters
     } = this.getState();
-    const queryParams = [];
-    if (pageSize) {
-      queryParams.push(`?pageSize=${pageSize}`);
-    }
-    if (currentPage) {
-      queryParams.push(`page=${currentPage}`);
-    }
-    if (from) {
-      queryParams.push(`from=${from}`);
-    }
-    if (to) {
-      queryParams.push(`to=${to}`);
-    }
-    return `${queryParams.join('&')}`;
+    const pageSize = String(NumberPageSize);
+    const currentPage = String(NumbreCurrentPage);
+    const query = mapStateInParams({ ...newsFilters, pageSize, currentPage });
+    return `${query.length ? '/?' : ''}${query.join('&')}`;
   }
   // eslint-disable-next-line
   async getAllNews() {

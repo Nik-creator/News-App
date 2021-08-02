@@ -28,32 +28,25 @@ const NewsContainer: FC<OwnProps> = ({ NewsRow, newsData = [], getNews }) => {
     )), [newsData]
   );
   return (
-    <Container maxWidth="lg">
-      <Box
-        display="flex"
-        justifyContent="space-between"
-      >
-        <Box maxWidth="720px">
-          {renderNewsCard}
-          <Box
-            mt={3}
-            display="flex"
-            justifyContent="center"
-          >
-            {!loading
+    <Box>
+      <Box>
+        {renderNewsCard}
+        <Box
+          mt={3}
+          display="flex"
+          justifyContent="center"
+        >
+          {!loading
           ?
             <Button variant="outlined" onClick={getNews}>
               Загрузить ещё
             </Button>
           :
             <CircularProgress />}
-          </Box>
-        </Box>
-        <Box>
-          <NewsSearch />
         </Box>
       </Box>
-    </Container>
+    </Box>
+
   );
 };
 

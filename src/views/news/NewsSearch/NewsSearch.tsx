@@ -1,25 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import type { FC } from 'react';
 import {
   Box,
   TextField,
   Typography,
-  makeStyles
+  makeStyles,
+  Chip,
+  Theme
 } from '@material-ui/core';
+import { format } from 'date-fns';
 import { DatePicker } from '@material-ui/pickers';
 import { useSnackbar } from 'notistack';
 import { useSelector, useDispatch } from 'src/redux/index';
 import type { RootState } from 'src/redux/index';
-import { fetchNews } from 'src/redux/slice/news';
+import { fetchNews, resetNews } from 'src/redux/slice/news';
 import { setFilters } from 'src/redux/slice/newsFilters';
+import type { SortByType } from 'src/types/settings';
+import { convectorChipsName, convectorChipsNameIntoEnglish } from 'src/helpers/convectorChipsName';
+import BaseTextField from 'src/components/baseTextField/BaseTextField';
 
-const styles = makeStyles(() => ({
+const styles = makeStyles((theme: Theme) => ({
   root: {
+    width: 320,
+    height: 350,
+    position: 'fixed',
     border: '1px solid #000',
     borderRadius: 4,
     padding: '10px 15px',
-    position: 'fixed',
-    right: 190
+    background: theme.palette.common.white
   },
   button: {
     width: 140
@@ -31,20 +39,32 @@ const styles = makeStyles(() => ({
 }));
 
 const NewsSearch: FC = () => {
-  const { from, to } = useSelector(({ newsFilters }: RootState) => newsFilters);
+  const { from, to, sortBy, qInTitle } = useSelector(({ newsFilters }: RootState) => newsFilters);
+  const [chips] = useState<SortByType[]>(['popularity', 'publishedAt', 'relevancy']);
+  const [chosenChips, setChosenChips] = useState<SortByType | undefined>(sortBy);
+  const [value, setValue] = useState<any>();
 
   const dispatch = useDispatch();
-  console.log(to);
   const classes = styles();
   const { enqueueSnackbar } = useSnackbar();
 
   const handleChangeDateEnd = (filterDate: any) => {
-    dispatch(setFilters({ to: filterDate }));
+    dispatch(setFilters({ to: format(filterDate, 'yyyy-MM-dd') }));
+    dispatch(resetNews());
+    dispatch(fetchNews());
   };
 
   const handleChangeDateStart = (filterDate: any) => {
-    console.log('filterDate', filterDate);
-    dispatch(setFilters({ from: filterDate }));
+    dispatch(setFilters({ from: format(filterDate, 'yyyy-MM-dd') }));
+    dispatch(resetNews());
+    dispatch(fetchNews());
+  };
+  const chooseChips = (e: any) => {
+    const EngName = convectorChipsNameIntoEnglish(e.target.innerText);
+    dispatch(setFilters({ sortBy: EngName as SortByType }));
+    setChosenChips(EngName as SortByType);
+    dispatch(resetNews());
+    dispatch(fetchNews());
   };
 
   const baseDatePickerProps = {
@@ -55,16 +75,29 @@ const NewsSearch: FC = () => {
     disableToolbar: true
   };
 
+  const renderChips: React.ReactNode = useMemo(
+    () => chips.map((chipName) => (
+      <Box m={2}>
+        <Chip
+          label={convectorChipsName(chipName)}
+          size="medium"
+          clickable
+          onClick={(n) => chooseChips(n)}
+          color="primary"
+          variant={chosenChips === chipName ? 'default' : 'outlined'}
+        />
+      </Box>
+      )), [chosenChips]
+  );
   return (
     <Box
-      width="320px"
-      height="400px"
       className={classes.root}
     >
       <Typography variant="h6">Поиск по дате</Typography>
       <Box
         display="flex"
         justifyContent="space-between"
+        mb={3}
       >
         <Box mt={2}>
           <DatePicker
@@ -88,6 +121,10 @@ const NewsSearch: FC = () => {
             className={classes.button}
           />
         </Box>
+      </Box>
+      <Typography variant="h6">Сортировка</Typography>
+      <Box mb={3}>
+        {renderChips}
       </Box>
     </Box>
   );

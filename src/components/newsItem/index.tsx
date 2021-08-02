@@ -5,14 +5,16 @@ import {
   CardContent,
   Typography,
   CardMedia,
-  makeStyles
+  makeStyles,
+  Box
 } from '@material-ui/core';
+import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
 import { IArticles } from 'src/types/News';
 
 const useStyles = makeStyles(() => ({
   root: {
-    display: 'flex',
-    marginBottom: 10,
+    marginBottom: 15,
     padding: 10
   },
   details: {
@@ -37,28 +39,37 @@ const NewsItem: FC<IArticles> = ({
   // author,
   // content,
   description,
-  // publishedAt,
+  publishedAt,
   // source,
   urlToImage,
 }) => {
+  const validDate = new Date(publishedAt);
+  const date = format(validDate, 'd MMMM yyy', { locale: ru });
   const classes = useStyles();
   return (
     <Card className={classes.root}>
-      <div className={classes.details}>
-        <CardContent className={classes.content}>
-          <Typography variant="h5">
-            {title}
-          </Typography>
-          <Typography variant="subtitle1">
-            {description}
-          </Typography>
-        </CardContent>
-      </div>
-      <CardMedia
-        image={urlToImage}
-        title={title}
-        className={classes.img}
-      />
+      <Box display="flex">
+        <div className={classes.details}>
+          <CardContent className={classes.content}>
+            <Typography variant="h5">
+              {title}
+            </Typography>
+            <Typography variant="subtitle1">
+              {description}
+            </Typography>
+          </CardContent>
+        </div>
+        <CardMedia
+          image={urlToImage}
+          title={title}
+          className={classes.img}
+        />
+      </Box>
+      <Box>
+        <Typography>
+          {date}
+        </Typography>
+      </Box>
     </Card>
   );
 };
