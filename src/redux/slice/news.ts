@@ -65,8 +65,6 @@ const slice = createSlice({
         status,
         totalResults
       } = payload;
-      console.log('in state', state.articles);
-      console.log('in action', articles);
       const newListNews = state.articles.concat(articles);
       state.articles = newListNews;
 

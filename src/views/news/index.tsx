@@ -50,7 +50,6 @@ const News = () => {
   };
 
   const getNewsWithNewPage = useCallback(() => {
-    console.log('before', pageCounter);
     setPageCounter((prevCount) => prevCount + 1);
   }, [pageCounter]
   );
