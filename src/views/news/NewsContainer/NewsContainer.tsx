@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import type { FC, ComponentType } from 'react';
-import { IArticles } from 'src/types/News';
+import { IArticles } from 'src/types/news';
 import {
   Button,
   Box,

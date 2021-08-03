@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { format } from 'date-fns';
 import type {} from '@reduxjs/toolkit';
-import type { INews } from 'src/types/News';
+import type { INews } from 'src/types/news';
 import type { SortByType } from 'src/types/settings';
 
 const sliceName = 'newsFilters';

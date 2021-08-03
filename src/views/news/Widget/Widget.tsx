@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useMemo, useEffect } from 'react';
 import type { FC } from 'react';
 import {
   Box,
   Card,
   makeStyles,
-  Theme
+  Theme,
 } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
+import useLocation from 'src/hooks/useLocation';
+import { useDispatch } from 'src/redux/index';
+import { fetchWeather } from 'src/redux/slice/weather';
 
 const styles = makeStyles((theme: Theme) => ({
   root: {
@@ -20,6 +24,30 @@ const styles = makeStyles((theme: Theme) => ({
 }));
 
 const WidgetWeather: FC = () => {
+  const { access, latitude, longitude, error } = useLocation();
+  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
+  const locationReady: boolean = Boolean(latitude) && Boolean(longitude);
+
+  if (access && locationReady) {
+    (async () => {
+      try {
+        const queryStringLocation = `${latitude},${longitude}`;
+        dispatch(fetchWeather(queryStringLocation));
+        enqueueSnackbar('Используется геолокация', {
+          variant: 'success'
+        });
+      } catch (er) {
+        console.error(er);
+      }
+    })();
+  } else {
+    dispatch(fetchWeather('auto:ip'));
+    enqueueSnackbar('Вы отключили использование геолокации. Это может нарушить использование виджета погоды', {
+      variant: 'warning'
+    });
+  }
+
   const classes = styles();
   return (
     <Card
@@ -30,4 +58,4 @@ const WidgetWeather: FC = () => {
   );
 };
 
-export default WidgetWeather;
+export default React.memo(WidgetWeather);

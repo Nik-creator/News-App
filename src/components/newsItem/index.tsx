@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { IArticles } from 'src/types/News';
+import { IArticles } from 'src/types/news';
 
 const useStyles = makeStyles(() => ({
   root: {

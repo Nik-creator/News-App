@@ -2,15 +2,22 @@ import {
     useDispatch as useReduxDispatch,
     useSelector as useReduxSelector
 } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import type { TypedUseSelectorHook } from 'react-redux';
 import type { ThunkAction } from 'redux-thunk';
 import type { Action } from '@reduxjs/toolkit';
 import rootReducer from './rootReducer';
 
+const middleware = getDefaultMiddleware({
+    immutableCheck: false,
+    serializableCheck: false,
+    thunk: true,
+});
+
 const store = configureStore({
     reducer: rootReducer,
-    devTools: true
+    devTools: true,
+    middleware
 });
 
 export type RootState = ReturnType<typeof store.getState>;

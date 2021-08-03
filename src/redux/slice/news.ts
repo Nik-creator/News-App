@@ -6,7 +6,7 @@ import {
 } from '@reduxjs/toolkit';
 import * as _ from 'lodash';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { INews } from 'src/types/News';
+import type { INews } from 'src/types/news';
 import API from 'src/API/api';
 
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
