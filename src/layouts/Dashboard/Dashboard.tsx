@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import type { FC } from 'react';
 import clsx from 'clsx';
+import { useHistory, NavLink } from 'react-router-dom';
 import {
   makeStyles,
   CssBaseline,
@@ -14,7 +15,7 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import { NavLink } from 'react-router-dom';
+
 import NavBar from './NavBar/index';
 import listItems from './listItems';
 
@@ -83,6 +84,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Dashboard:FC = ({ children }) => {
   const classes = useStyles();
+  const history = useHistory();
 
   const [open, setOpen] = React.useState(true);
 

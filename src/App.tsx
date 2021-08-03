@@ -10,7 +10,8 @@ function App() {
   return (
     <div>
       <SnackbarProvider
-        maxSnack={5}
+        maxSnack={2}
+        autoHideDuration={2500}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',

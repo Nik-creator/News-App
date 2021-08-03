@@ -1,22 +1,39 @@
 import axios from 'axios';
 import store from 'src/redux/index';
-import type { INews } from 'src/types/News';
+import type { INews } from 'src/types/news';
+import { format } from 'date-fns';
+import mapStateInParams from 'src/helpers/getQueryString';
+import type { Weather } from 'src/types/weather';
 
 const {
-  REACT_APP_API_URL: baseUrl,
-  REACT_APP_API_KEY: apiKey,
+  REACT_APP_NEWS_API_URL: baseUrl,
+  REACT_APP_NEWS_API_KEY: apiKey,
+  REACT_APP_WEATHER_API_URL: baseWeatherUrl,
+  REACT_APP_WEATHER_API_KEY: weatherApiKey
 } = process.env;
 
+const baseTimeoutTime = 8000;
+
 // eslint-disable-next-line
-export const axiosInstance = axios.create({
-  timeout: 8000,
+export const axiosNewsInstance = axios.create({
+  timeout: baseTimeoutTime,
   baseURL: baseUrl,
   params: {
     domains: 'yandex.ru'
   }
 });
 
-axiosInstance.defaults.headers.common.Authorization = apiKey;
+export const axiosWeatherInstance = axios.create({
+  timeout: baseTimeoutTime,
+  baseURL: baseWeatherUrl,
+  params: {
+    days: 5,
+    aqi: 'no',
+    alerts: 'no',
+  }
+});
+
+axiosNewsInstance.defaults.headers.common.Authorization = apiKey;
 
 class API {
   // eslint-disable-next-line
@@ -36,25 +53,31 @@ class API {
 
   private getQueryParams() {
     const {
-      settings: { pageSize },
-      news: { currentPage }
+      settings: { pageSize: NumberPageSize },
+      news: { currentPage: NumbreCurrentPage },
+      newsFilters
     } = this.getState();
-    const queryParams = [];
-    if (pageSize) {
-      queryParams.push(`?pageSize=${pageSize}`);
-    }
-    if (currentPage) {
-      queryParams.push(`page=${currentPage}`);
-    }
-    return `${queryParams.join('&')}`;
+    const pageSize = String(NumberPageSize);
+    const currentPage = String(NumbreCurrentPage);
+    const query: string[] = mapStateInParams({ ...newsFilters, pageSize, currentPage });
+    return `${query.length ? '/?' : ''}${query.join('&')}`;
   }
   // eslint-disable-next-line
   async getAllNews() {
     try {
-      const { data } = await axiosInstance.get<INews>(`/everything${this.getQueryParams()}`);
+      const { data } = await axiosNewsInstance.get<INews>(`/everything${this.getQueryParams()}`);
       return data;
-    } catch (e) {
-      return Promise.reject(new Error(e as string));
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+  // eslint-disable-next-line
+  async getWeather(q: string) {
+    try {
+      const { data } = await axiosWeatherInstance.get<Weather>(`/forecast.json?key=${weatherApiKey}&q=${q}`);
+      return data;
+    } catch (error) {
+      return Promise.reject(error);
     }
   }
 }

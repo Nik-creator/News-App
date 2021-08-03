@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import type { FC, ComponentType } from 'react';
-import { IArticles } from 'src/types/News';
+import { IArticles } from 'src/types/news';
 import {
   Button,
   Box,
@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import { useSelector } from 'src/redux/index';
 import type { RootState } from 'src/redux/index';
+import NewsSearch from '../NewsSearch/NewsSearch';
 
 interface OwnProps {
   NewsRow: ComponentType<IArticles>;
@@ -27,22 +28,25 @@ const NewsContainer: FC<OwnProps> = ({ NewsRow, newsData = [], getNews }) => {
     )), [newsData]
   );
   return (
-    <Container maxWidth="md">
-      {renderNewsCard}
-      <Box
-        mt={3}
-        display="flex"
-        justifyContent="center"
-      >
-        {!loading
+    <Box>
+      <Box>
+        {renderNewsCard}
+        <Box
+          mt={3}
+          display="flex"
+          justifyContent="center"
+        >
+          {!loading
           ?
             <Button variant="outlined" onClick={getNews}>
               Загрузить ещё
             </Button>
           :
             <CircularProgress />}
+        </Box>
       </Box>
-    </Container>
+    </Box>
+
   );
 };
 

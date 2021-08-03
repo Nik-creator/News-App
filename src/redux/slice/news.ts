@@ -4,8 +4,9 @@ import {
   AsyncThunk,
   AnyAction,
 } from '@reduxjs/toolkit';
+import * as _ from 'lodash';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { INews } from 'src/types/News';
+import type { INews } from 'src/types/news';
 import API from 'src/API/api';
 
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
@@ -21,7 +22,7 @@ const sliceName = 'news';
 
 export const fetchNews = createAsyncThunk(
   `${sliceName}/fetchNews`,
-  async () => {
+  async (thunkAPI) => {
     try {
       const newsData = await API.getAllNews();
       return newsData;
@@ -66,6 +67,14 @@ const slice = createSlice({
       } = payload;
       const newListNews = state.articles.concat(articles);
       state.articles = newListNews;
+
+      // if (state.articles.length > 0) {
+      //   const newListNews =
+      //   _.differenceWith(state.articles, articles, ({ publishedAt: publishedAtInState, publishedAt: publishedAtInAction }) => publishedAtInState === publishedAtInAction);
+      //   state.articles = newListNews;
+      // } else {
+      //   state.articles = articles;
+      // }
       state.status = status;
       state.totalResults = totalResults;
       state.loading = false;
