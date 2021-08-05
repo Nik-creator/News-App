@@ -37,6 +37,11 @@ export const routes: Routes = [
       },
       {
         exact: true,
+        path: '/news/:newsId',
+        component: lazy(() => import('src/views/news/CurrentNews/index')),
+      },
+      {
+        exact: true,
         path: '/settings',
         component: lazy(() => import('src/views/settings/index')),
       },

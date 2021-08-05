@@ -22,7 +22,7 @@ const NewsContainer: FC<OwnProps> = ({ NewsRow, newsData = [], getNews }) => {
   const renderNewsCard = useMemo(
     () => newsData.map((data) => (
       <NewsRow
-        key={data.publishedAt}
+        key={`${data.publishedAt}`} // TODO поправить повторяющийся ключ
         {...data}
       />
     )), [newsData]

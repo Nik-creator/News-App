@@ -1,4 +1,9 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, {
+  useEffect,
+  useCallback,
+  useState,
+  useMemo
+} from 'react';
 import {
   CircularProgress,
   Box,
@@ -6,12 +11,15 @@ import {
   Button,
   makeStyles
 } from '@material-ui/core';
+import qs from 'querystringify';
+import { useHistory } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import NewsItem from 'src/components/newsItem';
 import type { RootState } from 'src/redux/index';
 import { useSelector, useDispatch } from 'src/redux/index';
 import { fetchNews, setPage, resetNews } from 'src/redux/slice/news';
-import { resetFilters } from 'src/redux/slice/newsFilters';
+import { resetFilters, setFilters } from 'src/redux/slice/newsFilters';
+import mapStateInParams from 'src/helpers/getQueryString';
 import NewsContainer from './NewsContainer/NewsContainer';
 import NewsSearch from './NewsSearch/NewsSearch';
 import WidgetWeather from './Widget/Widget';
@@ -28,13 +36,59 @@ const styles = makeStyles(() => ({
 const News = () => {
   const [pageCounter, setPageCounter] = useState(1);
 
+  const history = useHistory();
+
   const { enqueueSnackbar } = useSnackbar();
 
   const classes = styles();
 
   const dispatch = useDispatch();
   const { articles: newsData, loading, error: requestError } = useSelector(({ news }: RootState) => news);
-  const { from, to } = useSelector(({ newsFilters }: RootState) => newsFilters);
+  const filters = useSelector(({ newsFilters }: RootState) => newsFilters);
+  const { currentPage: NumbreCurrentPage } = useSelector(({ news }: RootState) => news);
+  const { pageSize: NumberPageSize } = useSelector(({ settings }: RootState) => settings);
+
+  const createSearchString = useMemo(
+    () => {
+      const pageSize = String(NumberPageSize);
+      const currentPage = String(NumbreCurrentPage);
+      const searchString: string[] = mapStateInParams({ ...filters, pageSize, currentPage });
+      return `${searchString.length ? '?' : ''}${searchString.join('&')}`;
+    },
+    [filters, NumbreCurrentPage, NumberPageSize]
+  );
+
+  const checkFilters = (obj: object) => {
+    Object.entries(obj).forEach(
+      ([key, val]) => {
+        if (key === 'to') {
+          dispatch(setFilters({ to: val }));
+        }
+        if (key === 'from') {
+          dispatch(setFilters({ from: val }));
+        }
+        if (key === 'sortBy') {
+          dispatch(setFilters({ sortBy: val }));
+        }
+      }
+    );
+  };
+
+  useEffect(
+    () => {
+      const { search } = history.location;
+      const string = qs.parse(search);
+      checkFilters(string);
+    }, []
+  );
+
+  useEffect(
+    () => {
+      history.push({
+        search: createSearchString
+      });
+    }, [createSearchString]
+  );
 
   const newsDataLength = Boolean(newsData.length);
 

@@ -72,9 +72,9 @@ class API {
     }
   }
   // eslint-disable-next-line
-  async getWeather(q: string) {
+  async getWeather(location: string) {
     try {
-      const { data } = await axiosWeatherInstance.get<Weather>(`/forecast.json?key=${weatherApiKey}&q=${q}`);
+      const { data } = await axiosWeatherInstance.get<Weather>(`/forecast.json?key=${weatherApiKey}&q=${location}`);
       return data;
     } catch (error) {
       return Promise.reject(error);

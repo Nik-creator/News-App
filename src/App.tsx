@@ -1,26 +1,40 @@
-import React, { ComponentType } from 'react';
+import React from 'react';
 import './App.css';
-import Slide from '@material-ui/core/Slide';
-import { SnackbarProvider } from 'notistack';
-import { TransitionProps } from '@material-ui/core/transitions/transition';
-import renderRoutes from './routes/renderRoutes';
+import { useSnackbar } from 'notistack';
+import { useDispatch } from 'src/redux/index';
+import useLocation from 'src/hooks/useLocation';
+import { fetchWeather } from 'src/redux/slice/weather';
 import { routes } from './routes/routes';
+import renderRoutes from './routes/renderRoutes';
 
 function App() {
+  const { access, latitude, longitude, error } = useLocation();
+  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
+  const locationReady: boolean = Boolean(latitude) && Boolean(longitude);
+
+  if (access && locationReady) {
+    (async () => {
+      try {
+        const queryStringLocation = `${latitude},${longitude}`;
+        dispatch(fetchWeather(queryStringLocation));
+        enqueueSnackbar('Используется геолокация', {
+          variant: 'success'
+        });
+      } catch (er) {
+        console.error(er);
+      }
+    })();
+  } else {
+    dispatch(fetchWeather('auto:ip'));
+    enqueueSnackbar('Вы отключили использование геолокации. Это может нарушить использование виджета погоды', {
+      variant: 'warning'
+    });
+  }
   return (
-    <div>
-      <SnackbarProvider
-        maxSnack={2}
-        autoHideDuration={2500}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        TransitionComponent={Slide as ComponentType<TransitionProps>}
-      >
-        {renderRoutes(routes)}
-      </SnackbarProvider>
-    </div>
+    <>
+      {renderRoutes(routes)}
+    </>
   );
 }
 
