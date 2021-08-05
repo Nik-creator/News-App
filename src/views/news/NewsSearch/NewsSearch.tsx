@@ -77,18 +77,19 @@ const NewsSearch: FC = () => {
 
   const renderChips: React.ReactNode = useMemo(
     () => chips.map((chipName) => (
-      <Box m={2}>
+      <Box m={2} key={chipName}>
         <Chip
           label={convectorChipsName(chipName)}
           size="medium"
           clickable
           onClick={(n) => chooseChips(n)}
           color="primary"
-          variant={chosenChips === chipName ? 'default' : 'outlined'}
+          variant={chosenChips === chipName ? 'default' : 'outlined'} // TODO тут баг с отображением выбранного значения. Запрос идет правильно. Верстку доработать
         />
       </Box>
-      )), [chosenChips]
+      )), [chosenChips, sortBy]
   );
+
   return (
     <Box
       className={classes.root}

@@ -1,15 +1,14 @@
 import React, { useMemo, useEffect } from 'react';
 import type { FC } from 'react';
+import { RootState, useSelector } from 'src/redux/index';
 import {
   Box,
   Card,
+  CircularProgress,
   makeStyles,
   Theme,
 } from '@material-ui/core';
-import { useSnackbar } from 'notistack';
-import useLocation from 'src/hooks/useLocation';
-import { useDispatch } from 'src/redux/index';
-import { fetchWeather } from 'src/redux/slice/weather';
+import WeatherView from './WeatherView/WeatherView';
 
 const styles = makeStyles((theme: Theme) => ({
   root: {
@@ -24,36 +23,13 @@ const styles = makeStyles((theme: Theme) => ({
 }));
 
 const WidgetWeather: FC = () => {
-  const { access, latitude, longitude, error } = useLocation();
-  const dispatch = useDispatch();
-  const { enqueueSnackbar } = useSnackbar();
-  const locationReady: boolean = Boolean(latitude) && Boolean(longitude);
-
-  if (access && locationReady) {
-    (async () => {
-      try {
-        const queryStringLocation = `${latitude},${longitude}`;
-        dispatch(fetchWeather(queryStringLocation));
-        enqueueSnackbar('Используется геолокация', {
-          variant: 'success'
-        });
-      } catch (er) {
-        console.error(er);
-      }
-    })();
-  } else {
-    dispatch(fetchWeather('auto:ip'));
-    enqueueSnackbar('Вы отключили использование геолокации. Это может нарушить использование виджета погоды', {
-      variant: 'warning'
-    });
-  }
-
+  const { loading, data } = useSelector(({ weather }: RootState) => weather);
   const classes = styles();
   return (
     <Card
       className={classes.root}
     >
-      Тут будет погода
+      {loading ? <Box height="100%" display="flex" justifyContent="center" alignItems="center"><CircularProgress /></Box> : <WeatherView data={data} />}
     </Card>
   );
 };

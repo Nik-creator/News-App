@@ -6,7 +6,7 @@ import {
 } from '@reduxjs/toolkit';
 import * as _ from 'lodash';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { INews } from 'src/types/news';
+import type { INews, IArticles } from 'src/types/news';
 import API from 'src/API/api';
 
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
@@ -32,13 +32,18 @@ export const fetchNews = createAsyncThunk(
   }
 );
 
-const initialState: INews = {
+type CurrentNews = {
+  currentNews: IArticles;
+};
+
+const initialState: INews & CurrentNews = {
   status: null,
   error: null,
   currentPage: 1,
   loading: false,
   totalResults: 0,
   articles: [],
+  currentNews: {}
 };
 
 const slice = createSlice({
@@ -56,6 +61,12 @@ const slice = createSlice({
       action: PayloadAction<number>
     ) {
       state.currentPage = action.payload;
+    },
+    setCurrentNews(
+      state: CurrentNews,
+      action: PayloadAction<CurrentNews>
+    ) {
+      state.currentNews = action.payload.currentNews;
     }
   },
   extraReducers: (builder) => {
@@ -90,7 +101,11 @@ const slice = createSlice({
   }
 });
 
-export const { resetNews, setPage } = slice.actions;
+export const {
+  resetNews,
+  setPage,
+  setCurrentNews
+} = slice.actions;
 
 export const { reducer } = slice;
 
